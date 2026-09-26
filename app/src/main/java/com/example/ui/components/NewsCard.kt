@@ -109,58 +109,77 @@ fun NewsCard(
             Spacer(modifier = Modifier.height(6.dp))
 
             // Headline (Hindi prioritized with high readability)
+            val headlineText = if (isHindi) {
+                news.hindiHeadline.ifBlank { news.englishHeadline }
+            } else {
+                news.englishHeadline.ifBlank { news.hindiHeadline }
+            }
             Text(
-                text = if (isHindi) news.hindiHeadline else news.englishHeadline,
+                text = headlineText,
                 style = MaterialTheme.typography.titleSmall.copy(
                     fontWeight = FontWeight.Bold,
                     fontSize = 13.5.sp,
                     lineHeight = 18.sp
                 ),
-                maxLines = 2,
+                maxLines = 3,
                 overflow = TextOverflow.Ellipsis
             )
 
-            Spacer(modifier = Modifier.height(4.dp))
-
-            // Summary
-            Text(
-                text = if (isHindi) news.hindiSummary else news.englishSummary,
-                style = MaterialTheme.typography.bodySmall.copy(
-                    color = SlateTextSecondary,
-                    fontSize = 11.sp,
-                    lineHeight = 15.sp
-                ),
-                maxLines = 2,
-                overflow = TextOverflow.Ellipsis
-            )
+            // Summary (if available)
+            val summaryText = if (isHindi) news.hindiSummary else news.englishSummary
+            if (summaryText.isNotBlank()) {
+                Spacer(modifier = Modifier.height(4.dp))
+                Text(
+                    text = summaryText,
+                    style = MaterialTheme.typography.bodySmall.copy(
+                        color = SlateTextSecondary,
+                        fontSize = 11.sp,
+                        lineHeight = 15.sp
+                    ),
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis
+                )
+            }
 
             Spacer(modifier = Modifier.height(6.dp))
             HorizontalDivider(color = SlateBorder.copy(alpha = 0.5f))
             Spacer(modifier = Modifier.height(6.dp))
 
-            // Footer: Source Attribution + Action Icons
+            // Footer: Source Attribution ("Source: PIB, Govt. of India" + Publish Date) + Action Icons
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                // Source attribution
-                Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.weight(1f)) {
-                    Icon(
-                        imageVector = Icons.Default.Verified,
-                        contentDescription = null,
-                        tint = BharatBlue,
-                        modifier = Modifier.size(12.dp)
-                    )
-                    Spacer(modifier = Modifier.width(3.dp))
-                    Text(
-                        text = news.sourceName,
-                        fontSize = 10.sp,
-                        fontWeight = FontWeight.Medium,
-                        color = SlateTextSecondary,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis
-                    )
+                // Source attribution & Publish Date
+                Column(modifier = Modifier.weight(1f)) {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Icon(
+                            imageVector = Icons.Default.AccountBalance,
+                            contentDescription = null,
+                            tint = SaffronPrimary,
+                            modifier = Modifier.size(12.dp)
+                        )
+                        Spacer(modifier = Modifier.width(3.dp))
+                        Text(
+                            text = "Source: PIB, Govt. of India",
+                            fontSize = 10.sp,
+                            fontWeight = FontWeight.SemiBold,
+                            color = MaterialTheme.colorScheme.onSurface,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis
+                        )
+                    }
+                    if (news.sourceAttribution.publicationDateTime.isNotBlank()) {
+                        Spacer(modifier = Modifier.height(2.dp))
+                        Text(
+                            text = "📅 ${news.sourceAttribution.publicationDateTime}",
+                            fontSize = 9.sp,
+                            color = SlateTextSecondary,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis
+                        )
+                    }
                 }
 
                 // Share & Report

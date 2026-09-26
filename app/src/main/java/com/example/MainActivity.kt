@@ -63,6 +63,7 @@ fun BharatApp(viewModel: BharatViewModel) {
     val roomsList by viewModel.filteredRooms.collectAsStateWithLifecycle()
     val marketplaceList by viewModel.filteredMarketplace.collectAsStateWithLifecycle()
     val newsList by viewModel.filteredNews.collectAsStateWithLifecycle()
+    val newsRefreshError by viewModel.newsRefreshError.collectAsStateWithLifecycle()
     val jobsList by viewModel.filteredJobs.collectAsStateWithLifecycle()
     val socialPosts by viewModel.socialPosts.collectAsStateWithLifecycle()
     val conversations by viewModel.conversations.collectAsStateWithLifecycle()
@@ -161,7 +162,15 @@ fun BharatApp(viewModel: BharatViewModel) {
                             viewModel.selectAITool(tool)
                         },
                         onListingClick = { viewModel.selectListing(it) },
-                        onNewsClick = { viewModel.selectNews(it) },
+                        onNewsClick = { news ->
+                            try {
+                                val url = if (news.sourceUrl.isNotBlank()) news.sourceUrl else "https://pib.gov.in"
+                                val intent = android.content.Intent(android.content.Intent.ACTION_VIEW, android.net.Uri.parse(url))
+                                context.startActivity(intent)
+                            } catch (e: Exception) {
+                                viewModel.selectNews(news)
+                            }
+                        },
                         onJobClick = { viewModel.selectJob(it) },
                         onOpenPipelineSimulator = { viewModel.togglePipelineSimulator(true) },
                         onSaveClick = { id ->
@@ -286,9 +295,20 @@ fun BharatApp(viewModel: BharatViewModel) {
                         district = selectedDistrict,
                         area = selectedArea,
                         language = language,
+                        isRefreshing = isRefreshing,
+                        newsRefreshError = newsRefreshError,
+                        onRefresh = { viewModel.refreshHomeContent() },
                         onCategorySelect = { viewModel.setNewsCategory(it) },
                         onScopeSelect = { viewModel.setNewsScope(it) },
-                        onNewsClick = { viewModel.selectNews(it) },
+                        onNewsClick = { news ->
+                            try {
+                                val url = if (news.sourceUrl.isNotBlank()) news.sourceUrl else "https://pib.gov.in"
+                                val intent = android.content.Intent(android.content.Intent.ACTION_VIEW, android.net.Uri.parse(url))
+                                context.startActivity(intent)
+                            } catch (e: Exception) {
+                                viewModel.selectNews(news)
+                            }
+                        },
                         onSubmitNewsClick = { viewModel.openSubmitNews() },
                         onRunAutoNews = {
                             viewModel.runAutoNews()

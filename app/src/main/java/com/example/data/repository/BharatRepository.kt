@@ -64,6 +64,9 @@ class BharatRepository(
     private val _newsList = MutableStateFlow<List<NewsArticle>>(initialNews)
     val newsList: StateFlow<List<NewsArticle>> = _newsList.asStateFlow()
 
+    val newsRefreshError: StateFlow<String?> = ingestionService?.newsRefreshError
+        ?: MutableStateFlow<String?>(null).asStateFlow()
+
     // 1-Minute Live Auto Refresh
     private var liveNewsAutoRefreshJob: Job? = null
     private val _lastNewsSyncTime = MutableStateFlow(System.currentTimeMillis())
@@ -109,7 +112,21 @@ class BharatRepository(
                 }
             }
         }
-        // Start 1-minute automated regional live news refresh loop disabled for Google Play compliance
+
+        if (ingestionService != null) {
+            scope.launch {
+                ingestionService.pibNewsList.collect { pibList ->
+                    if (pibList.isNotEmpty()) {
+                        val currentUsrNews = _newsList.value.filter { it.verificationStatus == NewsVerificationStatus.USER_SUBMITTED }
+                        val combined = (pibList + currentUsrNews)
+                            .distinctBy { it.sourceUrl.ifBlank { it.id } }
+                            .take(50)
+                        _newsList.value = combined
+                        _lastNewsSyncTime.value = System.currentTimeMillis()
+                    }
+                }
+            }
+        }
     }
 
     // Approved Sources Whitelist
@@ -290,18 +307,24 @@ class BharatRepository(
         )
     }
 
-    // Ingest Automatic News - no fake/simulated articles are created (Google Play Misleading Claims & News Policy)
+    // Ingest Automatic News from official PIB feeds
     fun runAutoNewsIngestion() {
         _lastNewsSyncTime.value = System.currentTimeMillis()
+        scope.launch {
+            ingestionService?.fetchPibNews()
+        }
     }
 
     private fun startMinuteNewsRefreshLoop() {
         liveNewsAutoRefreshJob?.cancel()
     }
 
-    // Live news update - returns current latest article or null without fabricating fake news
+    // Live news update - fetches fresh news from official PIB feeds and updates list safely
     fun refreshLiveNews(): NewsArticle? {
         _lastNewsSyncTime.value = System.currentTimeMillis()
+        scope.launch {
+            ingestionService?.fetchPibNews()
+        }
         return _newsList.value.firstOrNull()
     }
 

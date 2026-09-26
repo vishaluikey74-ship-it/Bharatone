@@ -72,6 +72,7 @@ class BharatViewModel(
     val appLanguage = repository.appLanguage
     val listings = repository.listings
     val newsList = repository.newsList
+    val newsRefreshError = repository.newsRefreshError
     val lastNewsSyncTime = repository.lastNewsSyncTime
     val jobsList = repository.jobsList
     val approvedSources = repository.approvedSources
