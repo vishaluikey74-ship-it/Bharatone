@@ -1,0 +1,6 @@
+{
+  "name": "BharatOne",
+  "description": "India-wide Room & Property Rental, OLX Marketplace, Social Network & Hindi Local News Platform",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

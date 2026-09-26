@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <!-- Centered within 66dp zone (21dp to 87dp) -->
+    <!-- Home Roof & Structure (Saffron) -->
+    <path
+        android:pathData="M54,28 L30,46 L36,46 L36,74 L72,74 L72,46 L78,46 Z"
+        android:fillColor="#FF9933" />
+    
+    <!-- Inner Core & Doorway (Pure White) -->
+    <path
+        android:pathData="M48,54 L60,54 L60,74 L48,74 Z"
+        android:fillColor="#FFFFFF" />
+    
+    <!-- Base Platform & Growth Emblem (India Green) -->
+    <path
+        android:pathData="M26,74 L82,74 L78,80 L30,80 Z"
+        android:fillColor="#138808" />
+
+    <!-- Shopping Tag / Market Symbol overlay on top right -->
+    <path
+        android:pathData="M66,35 L76,35 L80,43 L72,49 L64,43 Z"
+        android:fillColor="#38BDF8" />
+    <path
+        android:pathData="M70,39 A1.5,1.5 0 1,0 73,39 A1.5,1.5 0 1,0 70,39"
+        android:fillColor="#FFFFFF" />
+
+    <!-- Community Core Light -->
+    <path
+        android:pathData="M54,43 A3,3 0 1,0 54,49 A3,3 0 1,0 54,43"
+        android:fillColor="#FFD166" />
+</vector>

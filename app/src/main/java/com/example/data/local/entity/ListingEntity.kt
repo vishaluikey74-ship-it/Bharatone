@@ -1,0 +1,117 @@
+package com.example.data.local.entity
+
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+import com.example.data.model.*
+
+@Entity(tableName = "listings")
+data class ListingEntity(
+    @PrimaryKey val id: String,
+    val domain: ListingDomain,
+    val title: String,
+    val description: String,
+    val price: Double,
+    val securityDeposit: Double = 0.0,
+    val negotiable: Boolean = true,
+    val condition: String = "Used",
+    val propertyCategory: PropertyCategory? = null,
+    val marketCategory: MarketCategory? = null,
+    val isFurnished: String = "Semi-Furnished",
+    val tenantPreference: String = "Anyone",
+    val ownerOrBroker: String = "Owner",
+    val availableFrom: String = "Immediate",
+    val brand: String = "",
+    val model: String = "",
+    val year: String = "",
+    val state: String = "Madhya Pradesh",
+    val district: String = "Balaghat",
+    val city: String = "Balaghat City",
+    val area: String = "Paraswada",
+    val address: String = "",
+    val nearbyLandmark: String = "Near Main Market / Bus Stand",
+    val electricityWater: String = "24/7 Water, Separate Submeter",
+    val sellerId: String,
+    val sellerName: String,
+    val sellerPhone: String,
+    val sellerBadge: VerificationBadge? = null,
+    val isPromoted: Boolean = false,
+    val imageUrls: List<String> = emptyList(),
+    val amenities: List<String> = emptyList(),
+    val createdAt: Long = System.currentTimeMillis(),
+    val sourceDomain: String = "roomdekhobgt.com"
+)
+
+fun ListingEntity.toDomainModel(): Listing {
+    return Listing(
+        id = id,
+        domain = domain,
+        title = title,
+        description = description,
+        price = price,
+        securityDeposit = securityDeposit,
+        negotiable = negotiable,
+        condition = condition,
+        propertyCategory = propertyCategory,
+        marketCategory = marketCategory,
+        isFurnished = isFurnished,
+        tenantPreference = tenantPreference,
+        ownerOrBroker = ownerOrBroker,
+        availableFrom = availableFrom,
+        brand = brand,
+        model = model,
+        year = year,
+        state = state,
+        district = district,
+        city = city,
+        area = area,
+        address = address,
+        nearbyLandmark = nearbyLandmark,
+        electricityWater = electricityWater,
+        sellerId = sellerId,
+        sellerName = sellerName,
+        sellerPhone = sellerPhone,
+        sellerBadge = sellerBadge,
+        isPromoted = isPromoted,
+        imageUrls = imageUrls,
+        amenities = amenities,
+        createdAt = createdAt
+    )
+}
+
+fun Listing.toEntity(sourceDomain: String = "roomdekhobgt.com"): ListingEntity {
+    return ListingEntity(
+        id = id,
+        domain = domain,
+        title = title,
+        description = description,
+        price = price,
+        securityDeposit = securityDeposit,
+        negotiable = negotiable,
+        condition = condition,
+        propertyCategory = propertyCategory,
+        marketCategory = marketCategory,
+        isFurnished = isFurnished,
+        tenantPreference = tenantPreference,
+        ownerOrBroker = ownerOrBroker,
+        availableFrom = availableFrom,
+        brand = brand,
+        model = model,
+        year = year,
+        state = state,
+        district = district,
+        city = city,
+        area = area,
+        address = address,
+        nearbyLandmark = nearbyLandmark,
+        electricityWater = electricityWater,
+        sellerId = sellerId,
+        sellerName = sellerName,
+        sellerPhone = sellerPhone,
+        sellerBadge = sellerBadge,
+        isPromoted = isPromoted,
+        imageUrls = imageUrls,
+        amenities = amenities,
+        createdAt = createdAt,
+        sourceDomain = sourceDomain
+    )
+}

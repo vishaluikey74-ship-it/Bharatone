@@ -1,0 +1,117 @@
+package com.example.data.local.entity
+
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+import com.example.data.model.*
+
+@Entity(tableName = "jobs")
+data class JobEntity(
+    @PrimaryKey val id: String,
+    val jobType: JobType,
+    val organization: String,
+    val postName: String,
+    val hindiPostName: String,
+    val vacancy: String,
+    val qualification: String,
+    val ageLimit: String,
+    val salary: String,
+    val applicationStartDate: String,
+    val lastDate: String,
+    val examDate: String,
+    val applicationFee: String,
+    val selectionProcess: String,
+    val officialNotificationUrl: String,
+    val officialApplyLink: String,
+    val officialSource: String,
+    val employerVerification: EmployerVerification = EmployerVerification.UNVERIFIED_EMPLOYER,
+    val companyName: String? = null,
+    val contactPhone: String? = null,
+    val contactEmail: String? = null,
+    val timing: String = "Full-Time (10 AM - 7 PM)",
+    val genderPreference: String = "Any",
+    val jobCategoryTag: String = "General",
+    val imageUrl: String = "",
+    val publicationLevel: PublicationLevel = PublicationLevel.LEVEL_1_AUTO,
+    val isUnconfirmedMissingInfo: Boolean = false,
+    val state: String = "Madhya Pradesh",
+    val district: String = "Balaghat",
+    val location: String = "Balaghat City",
+    val publishedAt: Long = System.currentTimeMillis(),
+    val hindiDescription: String = "",
+    val sourceDomain: String = "jobdekhobgt.com"
+)
+
+fun JobEntity.toDomainModel(): JobListing {
+    return JobListing(
+        id = id,
+        jobType = jobType,
+        organization = organization,
+        postName = postName,
+        hindiPostName = hindiPostName,
+        vacancy = vacancy,
+        qualification = qualification,
+        ageLimit = ageLimit,
+        salary = salary,
+        applicationStartDate = applicationStartDate,
+        lastDate = lastDate,
+        examDate = examDate,
+        applicationFee = applicationFee,
+        selectionProcess = selectionProcess,
+        officialNotificationUrl = officialNotificationUrl,
+        officialApplyLink = officialApplyLink,
+        officialSource = officialSource,
+        employerVerification = employerVerification,
+        companyName = companyName,
+        contactPhone = contactPhone,
+        contactEmail = contactEmail,
+        timing = timing,
+        genderPreference = genderPreference,
+        jobCategoryTag = jobCategoryTag,
+        imageUrl = imageUrl,
+        publicationLevel = publicationLevel,
+        isUnconfirmedMissingInfo = isUnconfirmedMissingInfo,
+        state = state,
+        district = district,
+        location = location,
+        publishedAt = publishedAt,
+        hindiDescription = hindiDescription
+    )
+}
+
+fun JobListing.toEntity(sourceDomain: String = "jobdekhobgt.com"): JobEntity {
+    return JobEntity(
+        id = id,
+        jobType = jobType,
+        organization = organization,
+        postName = postName,
+        hindiPostName = hindiPostName,
+        vacancy = vacancy,
+        qualification = qualification,
+        ageLimit = ageLimit,
+        salary = salary,
+        applicationStartDate = applicationStartDate,
+        lastDate = lastDate,
+        examDate = examDate,
+        applicationFee = applicationFee,
+        selectionProcess = selectionProcess,
+        officialNotificationUrl = officialNotificationUrl,
+        officialApplyLink = officialApplyLink,
+        officialSource = officialSource,
+        employerVerification = employerVerification,
+        companyName = companyName,
+        contactPhone = contactPhone,
+        contactEmail = contactEmail,
+        timing = timing,
+        genderPreference = genderPreference,
+        jobCategoryTag = jobCategoryTag,
+        imageUrl = imageUrl,
+        publicationLevel = publicationLevel,
+        isUnconfirmedMissingInfo = isUnconfirmedMissingInfo,
+        state = state,
+        district = district,
+        location = location,
+        publishedAt = publishedAt,
+        hindiDescription = hindiDescription,
+        sourceDomain = sourceDomain
+    )
+}
