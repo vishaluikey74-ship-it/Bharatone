@@ -71,8 +71,8 @@ enum class AIStudioTool(
 data class GroundedPlaceItem(
     val title: String,
     val address: String,
-    val rating: Double,
-    val reviewCount: Int,
+    val rating: Double? = null,
+    val reviewCount: Int? = null,
     val mapUri: String? = null,
     val category: String,
     val distance: String? = null

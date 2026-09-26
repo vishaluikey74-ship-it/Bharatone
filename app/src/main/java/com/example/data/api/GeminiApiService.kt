@@ -378,13 +378,22 @@ class GeminiApiService {
                         val chunk = searchChunks.getJSONObject(i)
                         val mapData = chunk.optJSONObject("maps") ?: chunk.optJSONObject("web")
                         if (mapData != null) {
+                            val rating = if (mapData.has("rating") && !mapData.isNull("rating")) {
+                                val r = mapData.optDouble("rating", Double.NaN)
+                                if (!r.isNaN()) r else null
+                            } else null
+                            val reviewCount = if (mapData.has("reviewCount") && !mapData.isNull("reviewCount")) {
+                                val rc = mapData.optInt("reviewCount", -1)
+                                if (rc >= 0) rc else null
+                            } else null
+
                             places.add(
                                 GroundedPlaceItem(
-                                    title = mapData.optString("title", "Verified Location"),
-                                    address = mapData.optString("address", "$cityDistrict"),
-                                    rating = mapData.optDouble("rating", 4.5),
-                                    reviewCount = mapData.optInt("reviewCount", 120),
-                                    mapUri = mapData.optString("uri"),
+                                    title = mapData.optString("title", "Location"),
+                                    address = mapData.optString("address", cityDistrict),
+                                    rating = rating,
+                                    reviewCount = reviewCount,
+                                    mapUri = if (mapData.has("uri")) mapData.optString("uri") else null,
                                     category = "Maps Grounded Place"
                                 )
                             )
@@ -393,21 +402,14 @@ class GeminiApiService {
                 }
             }
 
-            if (answerText.isBlank()) {
-                answerText = "Verified Google Maps Grounding returned accurate locations and landmarks in $cityDistrict for: '$prompt'."
-            }
-
-            if (places.isEmpty()) {
-                // Add contextual grounded items
-                places.addAll(generateDefaultMapsResults(prompt, cityDistrict))
+            if (places.isEmpty() && answerText.isBlank()) {
+                answerText = "No results found, please try again"
             }
 
             Result.success(Pair(answerText, places))
         } catch (e: Exception) {
             Log.e("GeminiApiService", "queryMapsGrounding error: ${e.message}", e)
-            val fallbackPlaces = generateDefaultMapsResults(prompt, cityDistrict)
-            val fallbackText = "Grounded Maps search for '$prompt' in $cityDistrict returned verified locations with geo-coordinates, ratings, and road connections."
-            Result.success(Pair(fallbackText, fallbackPlaces))
+            Result.success(Pair("No results found, please try again", emptyList()))
         }
     }
 
@@ -484,20 +486,14 @@ class GeminiApiService {
                 }
             }
 
-            if (answerText.isBlank()) {
-                answerText = "Google Search Grounding performed a live web scan for: '$prompt'. Information verified with official portals and trusted sources."
-            }
-
-            if (sources.isEmpty()) {
-                sources.addAll(generateDefaultSearchSources(prompt))
+            if (sources.isEmpty() && answerText.isBlank()) {
+                answerText = "No results found, please try again"
             }
 
             Result.success(Pair(answerText, sources))
         } catch (e: Exception) {
             Log.e("GeminiApiService", "querySearchGrounding error: ${e.message}", e)
-            val fallbackSources = generateDefaultSearchSources(prompt)
-            val fallbackText = "Google Search Grounding successfully fact-checked: '$prompt' with official government notifications, gazette bulletins, and state portals."
-            Result.success(Pair(fallbackText, fallbackSources))
+            Result.success(Pair("No results found, please try again", emptyList()))
         }
     }
 
@@ -505,96 +501,5 @@ class GeminiApiService {
         val outputStream = ByteArrayOutputStream()
         bitmap.compress(Bitmap.CompressFormat.JPEG, 85, outputStream)
         return Base64.encodeToString(outputStream.toByteArray(), Base64.NO_WRAP)
-    }
-
-    private fun generateDefaultMapsResults(query: String, location: String): List<GroundedPlaceItem> {
-        val baseCity = if (location.contains("Indore", true)) "Indore" else "Bhopal"
-        return when {
-            query.contains("hostel", true) || query.contains("pg", true) || query.contains("room", true) -> listOf(
-                GroundedPlaceItem(
-                    title = "Royal Boys PG & Student Accommodation",
-                    address = "Zone-II, MP Nagar, Near DB City Mall, $baseCity",
-                    rating = 4.8,
-                    reviewCount = 245,
-                    category = "Hostel / PG",
-                    distance = "0.4 km away"
-                ),
-                GroundedPlaceItem(
-                    title = "Shanti Girls Hostel & Residence",
-                    address = "Plot 14, Indrapuri Sector C, $baseCity",
-                    rating = 4.7,
-                    reviewCount = 189,
-                    category = "Girls Hostel",
-                    distance = "1.2 km away"
-                ),
-                GroundedPlaceItem(
-                    title = "Elite Executive Rooms & Flats",
-                    address = "Arera Colony E-3, Near Metro Pillar 112, $baseCity",
-                    rating = 4.9,
-                    reviewCount = 310,
-                    category = "Serviced Apartment",
-                    distance = "2.1 km away"
-                )
-            )
-            query.contains("job", true) || query.contains("exam", true) || query.contains("office", true) -> listOf(
-                GroundedPlaceItem(
-                    title = "MP Professional Examination Board (ESB)",
-                    address = "Chinar Park East, Main Road No. 1, $baseCity",
-                    rating = 4.6,
-                    reviewCount = 1420,
-                    category = "Government Examination Office",
-                    distance = "3.2 km away"
-                ),
-                GroundedPlaceItem(
-                    title = "District Employment & Career Exchange",
-                    address = "Kolar Road, Old Secretariate, $baseCity",
-                    rating = 4.4,
-                    reviewCount = 530,
-                    category = "Employment Center",
-                    distance = "4.0 km away"
-                )
-            )
-            else -> listOf(
-                GroundedPlaceItem(
-                    title = "Central City Square & Business Hub",
-                    address = "Hoshangabad Road, Zone I, $baseCity",
-                    rating = 4.8,
-                    reviewCount = 890,
-                    category = "Commercial Complex",
-                    distance = "0.8 km away"
-                ),
-                GroundedPlaceItem(
-                    title = "District Administrative Complex & Public Service Centre",
-                    address = "Collectorate Road, Civil Lines, $baseCity",
-                    rating = 4.5,
-                    reviewCount = 620,
-                    category = "Public Service Centre",
-                    distance = "1.5 km away"
-                )
-            )
-        }
-    }
-
-    private fun generateDefaultSearchSources(query: String): List<GroundedWebSource> {
-        return listOf(
-            GroundedWebSource(
-                title = "Government of Madhya Pradesh Official Portal",
-                url = "https://mp.gov.in/notifications",
-                domain = "mp.gov.in",
-                snippet = "Live state gazette notifications, exam dates, recruitment notices and verified press releases."
-            ),
-            GroundedWebSource(
-                title = "MP Employees Selection Board (ESB)",
-                url = "https://esb.mp.gov.in/latest-updates",
-                domain = "esb.mp.gov.in",
-                snippet = "Official results, admit card releases, eligibility rules and syllabus announcements."
-            ),
-            GroundedWebSource(
-                title = "Press Information Bureau (PIB) Fact Check",
-                url = "https://pib.gov.in/factcheck",
-                domain = "pib.gov.in",
-                snippet = "Verified authenticity checks regarding government welfare schemes and exam alerts."
-            )
-        )
     }
 }

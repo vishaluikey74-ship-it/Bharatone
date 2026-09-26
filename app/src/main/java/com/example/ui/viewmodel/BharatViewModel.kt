@@ -316,6 +316,8 @@ class BharatViewModel(
             val result = geminiApiService.queryMapsGrounding(prompt, city)
             result.onSuccess { pair ->
                 _mapsGroundingResult.value = pair
+            }.onFailure {
+                _mapsGroundingResult.value = Pair("No results found, please try again", emptyList())
             }
             _isAILoading.value = false
             _aiStatusMessage.value = ""
@@ -330,6 +332,8 @@ class BharatViewModel(
             val result = geminiApiService.querySearchGrounding(prompt)
             result.onSuccess { pair ->
                 _searchGroundingResult.value = pair
+            }.onFailure {
+                _searchGroundingResult.value = Pair("No results found, please try again", emptyList())
             }
             _isAILoading.value = false
             _aiStatusMessage.value = ""

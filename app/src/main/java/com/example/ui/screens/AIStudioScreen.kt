@@ -1385,156 +1385,211 @@ fun MapsGroundingSection(
         }
 
         // Grounded Results List
-        val (summaryText, placeList) = mapsResult ?: Pair(
-            "Google Maps Grounding with gemini-3.5-flash identified verified student hostels, PG rooms, and transport connections.",
-            listOf(
-                GroundedPlaceItem(
-                    title = "Royal Boys PG & Student Accommodation",
-                    address = "Zone-II, MP Nagar, Near DB City Mall, Bhopal, MP",
-                    rating = 4.8,
-                    reviewCount = 245,
-                    category = "Hostel / PG",
-                    distance = "0.4 km away"
-                ),
-                GroundedPlaceItem(
-                    title = "Shanti Girls Hostel & Residence",
-                    address = "Plot 14, Indrapuri Sector C, Bhopal, MP",
-                    rating = 4.7,
-                    reviewCount = 189,
-                    category = "Girls Hostel",
-                    distance = "1.2 km away"
-                ),
-                GroundedPlaceItem(
-                    title = "Elite Executive Rooms & Flats",
-                    address = "Arera Colony E-3, Near Metro Pillar 112, Bhopal, MP",
-                    rating = 4.9,
-                    reviewCount = 310,
-                    category = "Serviced Apartment",
-                    distance = "2.1 km away"
-                )
-            )
-        )
-
-        item {
-            Card(
-                shape = RoundedCornerShape(16.dp),
-                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
-                border = BorderStroke(1.dp, ForestGreen.copy(alpha = 0.3f))
-            ) {
-                Column(modifier = Modifier.padding(16.dp)) {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
+        if (mapsResult == null) {
+            item {
+                Card(
+                    shape = RoundedCornerShape(14.dp),
+                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+                    border = BorderStroke(1.dp, SlateBorder.copy(alpha = 0.5f))
+                ) {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(20.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally
                     ) {
+                        Icon(
+                            imageVector = Icons.Default.LocationOn,
+                            contentDescription = null,
+                            tint = ForestGreen,
+                            modifier = Modifier.size(36.dp)
+                        )
+                        Spacer(modifier = Modifier.height(8.dp))
                         Text(
-                            text = if (isHindi) "मैप्स ग्राउंडिंग सारांश" else "Grounded Maps Analysis",
+                            text = if (isHindi) "खोजने के लिए ऊपर दिए गए बटन को दबाएं" else "Search Grounded Places",
                             fontWeight = FontWeight.Bold,
                             fontSize = 14.sp
                         )
+                        Spacer(modifier = Modifier.height(4.dp))
+                        Text(
+                            text = if (isHindi) "गूगल मैप्स टूल से लाइव सत्यापित स्थान प्राप्त करें।" else "Use the Google Maps tool above to fetch live location data.",
+                            fontSize = 12.sp,
+                            color = SlateTextSecondary,
+                            textAlign = TextAlign.Center
+                        )
                     }
-
-                    Spacer(modifier = Modifier.height(8.dp))
-                    Text(
-                        text = summaryText,
-                        fontSize = 13.sp,
-                        color = SlateTextPrimary,
-                        lineHeight = 18.sp
-                    )
                 }
             }
-        }
-
-        item {
-            Text(
-                text = if (isHindi) "स्थान व संपर्क:" else "Grounded Locations (${placeList.size}):",
-                fontWeight = FontWeight.Bold,
-                fontSize = 14.sp,
-                color = SlateTextPrimary
-            )
-        }
-
-        items(placeList) { place ->
-            Card(
-                shape = RoundedCornerShape(14.dp),
-                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
-                border = BorderStroke(1.dp, SlateBorder.copy(alpha = 0.7f)),
-                elevation = CardDefaults.cardElevation(defaultElevation = 1.dp)
-            ) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(12.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Box(
-                        modifier = Modifier
-                            .size(42.dp)
-                            .background(ForestGreenContainer, CircleShape),
-                        contentAlignment = Alignment.Center
+        } else {
+            val (summaryText, placeList) = mapsResult
+            if (placeList.isEmpty()) {
+                item {
+                    Card(
+                        shape = RoundedCornerShape(14.dp),
+                        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+                        border = BorderStroke(1.dp, SlateBorder.copy(alpha = 0.7f))
                     ) {
-                        Icon(
-                            imageVector = Icons.Default.Place,
-                            contentDescription = null,
-                            tint = ForestGreen,
-                            modifier = Modifier.size(22.dp)
-                        )
-                    }
-
-                    Spacer(modifier = Modifier.width(12.dp))
-
-                    Column(modifier = Modifier.weight(1f)) {
-                        Text(
-                            text = place.title,
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 13.5.sp
-                        )
-                        Spacer(modifier = Modifier.height(2.dp))
-                        Text(
-                            text = place.address,
-                            fontSize = 11.5.sp,
-                            color = SlateTextSecondary,
-                            maxLines = 2,
-                            overflow = TextOverflow.Ellipsis
-                        )
-                        Spacer(modifier = Modifier.height(4.dp))
-                        Row(verticalAlignment = Alignment.CenterVertically) {
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(20.dp),
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Info,
+                                contentDescription = null,
+                                tint = SlateTextSecondary,
+                                modifier = Modifier.size(36.dp)
+                            )
+                            Spacer(modifier = Modifier.height(8.dp))
                             Text(
-                                text = "⭐ ${place.rating}",
-                                fontSize = 11.sp,
+                                text = if (isHindi) "कोई परिणाम नहीं मिला, कृपया पुनः प्रयास करें" else "No results found, please try again",
                                 fontWeight = FontWeight.Bold,
-                                color = SaffronDark
+                                fontSize = 14.sp,
+                                color = SlateTextPrimary,
+                                textAlign = TextAlign.Center
                             )
-                            Text(
-                                text = " (${place.reviewCount} reviews)",
-                                fontSize = 10.5.sp,
-                                color = SlateTextSecondary
-                            )
-                            if (place.distance != null) {
+                            if (summaryText.isNotBlank() && summaryText != "No results found, please try again") {
+                                Spacer(modifier = Modifier.height(6.dp))
                                 Text(
-                                    text = " • ${place.distance}",
-                                    fontSize = 10.5.sp,
-                                    color = ForestGreen,
-                                    fontWeight = FontWeight.Bold
+                                    text = summaryText,
+                                    fontSize = 12.sp,
+                                    color = SlateTextSecondary,
+                                    textAlign = TextAlign.Center
                                 )
                             }
                         }
                     }
-
-                    IconButton(
-                        onClick = {
-                            Toast.makeText(context, "Opening Google Maps Directions for ${place.title}...", Toast.LENGTH_SHORT).show()
-                        },
-                        modifier = Modifier
-                            .size(36.dp)
-                            .background(SlateBorderLight, CircleShape)
+                }
+            } else {
+                item {
+                    Card(
+                        shape = RoundedCornerShape(16.dp),
+                        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+                        border = BorderStroke(1.dp, ForestGreen.copy(alpha = 0.3f))
                     ) {
-                        Icon(
-                            imageVector = Icons.Default.Navigation,
-                            contentDescription = "Navigate",
-                            tint = ForestGreen,
-                            modifier = Modifier.size(18.dp)
-                        )
+                        Column(modifier = Modifier.padding(16.dp)) {
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.SpaceBetween,
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Text(
+                                    text = if (isHindi) "मैप्स ग्राउंडिंग सारांश" else "Grounded Maps Analysis",
+                                    fontWeight = FontWeight.Bold,
+                                    fontSize = 14.sp
+                                )
+                            }
+
+                            Spacer(modifier = Modifier.height(8.dp))
+                            Text(
+                                text = summaryText,
+                                fontSize = 13.sp,
+                                color = SlateTextPrimary,
+                                lineHeight = 18.sp
+                            )
+                        }
+                    }
+                }
+
+                item {
+                    Text(
+                        text = if (isHindi) "स्थान व संपर्क (${placeList.size}):" else "Grounded Locations (${placeList.size}):",
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 14.sp,
+                        color = SlateTextPrimary
+                    )
+                }
+
+                items(placeList) { place ->
+                    Card(
+                        shape = RoundedCornerShape(14.dp),
+                        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+                        border = BorderStroke(1.dp, SlateBorder.copy(alpha = 0.7f)),
+                        elevation = CardDefaults.cardElevation(defaultElevation = 1.dp)
+                    ) {
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(12.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Box(
+                                modifier = Modifier
+                                    .size(42.dp)
+                                    .background(ForestGreenContainer, CircleShape),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.Place,
+                                    contentDescription = null,
+                                    tint = ForestGreen,
+                                    modifier = Modifier.size(22.dp)
+                                )
+                            }
+
+                            Spacer(modifier = Modifier.width(12.dp))
+
+                            Column(modifier = Modifier.weight(1f)) {
+                                Text(
+                                    text = place.title,
+                                    fontWeight = FontWeight.Bold,
+                                    fontSize = 13.5.sp
+                                )
+                                Spacer(modifier = Modifier.height(2.dp))
+                                Text(
+                                    text = place.address,
+                                    fontSize = 11.5.sp,
+                                    color = SlateTextSecondary,
+                                    maxLines = 2,
+                                    overflow = TextOverflow.Ellipsis
+                                )
+                                if (place.rating != null || place.reviewCount != null || place.distance != null) {
+                                    Spacer(modifier = Modifier.height(4.dp))
+                                    Row(verticalAlignment = Alignment.CenterVertically) {
+                                        if (place.rating != null) {
+                                            Text(
+                                                text = "⭐ ${place.rating}",
+                                                fontSize = 11.sp,
+                                                fontWeight = FontWeight.Bold,
+                                                color = SaffronDark
+                                            )
+                                        }
+                                        if (place.reviewCount != null) {
+                                            Text(
+                                                text = " (${place.reviewCount} reviews)",
+                                                fontSize = 10.5.sp,
+                                                color = SlateTextSecondary
+                                            )
+                                        }
+                                        if (place.distance != null) {
+                                            Text(
+                                                text = if (place.rating != null || place.reviewCount != null) " • ${place.distance}" else place.distance,
+                                                fontSize = 10.5.sp,
+                                                color = ForestGreen,
+                                                fontWeight = FontWeight.Bold
+                                            )
+                                        }
+                                    }
+                                }
+                            }
+
+                            IconButton(
+                                onClick = {
+                                    Toast.makeText(context, "Opening Google Maps Directions for ${place.title}...", Toast.LENGTH_SHORT).show()
+                                },
+                                modifier = Modifier
+                                    .size(36.dp)
+                                    .background(SlateBorderLight, CircleShape)
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.Navigation,
+                                    contentDescription = "Navigate",
+                                    tint = ForestGreen,
+                                    modifier = Modifier.size(18.dp)
+                                )
+                            }
+                        }
                     }
                 }
             }
@@ -1988,140 +2043,195 @@ fun SearchGroundingSection(
         }
 
         // Grounded Results
-        val (summaryText, sourceList) = searchResult ?: Pair(
-            "Google Search Grounding performed a live web scan. Verified official gazette updates, ESB recruitment schedules, and state government press releases for 2026.",
-            listOf(
-                GroundedWebSource(
-                    title = "Government of Madhya Pradesh Official Portal",
-                    url = "https://mp.gov.in/notifications",
-                    domain = "mp.gov.in",
-                    snippet = "Live state gazette notifications, exam dates, recruitment notices and verified press releases."
-                ),
-                GroundedWebSource(
-                    title = "MP Employees Selection Board (ESB)",
-                    url = "https://esb.mp.gov.in/latest-updates",
-                    domain = "esb.mp.gov.in",
-                    snippet = "Official results, admit card releases, eligibility rules and syllabus announcements."
-                ),
-                GroundedWebSource(
-                    title = "Press Information Bureau (PIB) Fact Check",
-                    url = "https://pib.gov.in/factcheck",
-                    domain = "pib.gov.in",
-                    snippet = "Verified authenticity checks regarding government welfare schemes and exam alerts."
-                )
-            )
-        )
-
-        item {
-            Card(
-                shape = RoundedCornerShape(16.dp),
-                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
-                border = BorderStroke(1.dp, SaffronPrimary.copy(alpha = 0.3f))
-            ) {
-                Column(modifier = Modifier.padding(16.dp)) {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
+        if (searchResult == null) {
+            item {
+                Card(
+                    shape = RoundedCornerShape(14.dp),
+                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+                    border = BorderStroke(1.dp, SlateBorder.copy(alpha = 0.5f))
+                ) {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(20.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally
                     ) {
+                        Icon(
+                            imageVector = Icons.Default.Search,
+                            contentDescription = null,
+                            tint = SaffronPrimary,
+                            modifier = Modifier.size(36.dp)
+                        )
+                        Spacer(modifier = Modifier.height(8.dp))
                         Text(
-                            text = if (isHindi) "सर्च ग्राउंडिंग परिणाम" else "Grounded Search Result",
+                            text = if (isHindi) "जांचने के लिए ऊपर दिए गए बटन को दबाएं" else "Fact Check with Google Search",
                             fontWeight = FontWeight.Bold,
                             fontSize = 14.sp
                         )
-                    }
-
-                    Spacer(modifier = Modifier.height(8.dp))
-                    Text(
-                        text = summaryText,
-                        fontSize = 13.sp,
-                        color = SlateTextPrimary,
-                        lineHeight = 19.sp
-                    )
-                }
-            }
-        }
-
-        item {
-            Text(
-                text = if (isHindi) "वेब संदर्भ व स्रोत:" else "Web Citations & Sources (${sourceList.size}):",
-                fontWeight = FontWeight.Bold,
-                fontSize = 14.sp,
-                color = SlateTextPrimary
-            )
-        }
-
-        items(sourceList) { src ->
-            Card(
-                shape = RoundedCornerShape(14.dp),
-                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
-                border = BorderStroke(1.dp, SlateBorder.copy(alpha = 0.7f)),
-                elevation = CardDefaults.cardElevation(defaultElevation = 1.dp)
-            ) {
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(12.dp)
-                ) {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Surface(
-                            shape = RoundedCornerShape(6.dp),
-                            color = SlateBorderLight
-                        ) {
-                            Text(
-                                text = src.domain,
-                                fontSize = 10.sp,
-                                fontWeight = FontWeight.Bold,
-                                color = SlateTextSecondary,
-                                modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp)
-                            )
-                        }
-
-                        Icon(
-                            imageVector = Icons.Default.CheckCircle,
-                            contentDescription = "Web Source",
-                            tint = ForestGreen,
-                            modifier = Modifier.size(16.dp)
-                        )
-                    }
-
-                    Spacer(modifier = Modifier.height(6.dp))
-
-                    Text(
-                        text = src.title,
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 13.sp,
-                        color = SlateTextPrimary
-                    )
-
-                    if (!src.snippet.isNullOrBlank()) {
                         Spacer(modifier = Modifier.height(4.dp))
                         Text(
-                            text = src.snippet,
-                            fontSize = 11.5.sp,
+                            text = if (isHindi) "गूगल सर्च टूल से लाइव वेब स्रोतों और आधिकारिक सूचनाओं की जांच करें।" else "Use the Google Search tool above to verify facts with live web sources.",
+                            fontSize = 12.sp,
                             color = SlateTextSecondary,
-                            maxLines = 2,
-                            overflow = TextOverflow.Ellipsis
+                            textAlign = TextAlign.Center
                         )
                     }
-
-                    Spacer(modifier = Modifier.height(8.dp))
-
-                    Text(
-                        text = src.url,
-                        fontSize = 10.5.sp,
-                        color = SaffronDark,
-                        fontWeight = FontWeight.SemiBold,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
-                        modifier = Modifier.clickable {
-                            Toast.makeText(context, "Opening source citation: ${src.url}", Toast.LENGTH_SHORT).show()
+                }
+            }
+        } else {
+            val (summaryText, sourceList) = searchResult
+            if (sourceList.isEmpty()) {
+                item {
+                    Card(
+                        shape = RoundedCornerShape(14.dp),
+                        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+                        border = BorderStroke(1.dp, SlateBorder.copy(alpha = 0.7f))
+                    ) {
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(20.dp),
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Info,
+                                contentDescription = null,
+                                tint = SlateTextSecondary,
+                                modifier = Modifier.size(36.dp)
+                            )
+                            Spacer(modifier = Modifier.height(8.dp))
+                            Text(
+                                text = if (isHindi) "कोई परिणाम नहीं मिला, कृपया पुनः प्रयास करें" else "No results found, please try again",
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 14.sp,
+                                color = SlateTextPrimary,
+                                textAlign = TextAlign.Center
+                            )
+                            if (summaryText.isNotBlank() && summaryText != "No results found, please try again") {
+                                Spacer(modifier = Modifier.height(6.dp))
+                                Text(
+                                    text = summaryText,
+                                    fontSize = 12.sp,
+                                    color = SlateTextSecondary,
+                                    textAlign = TextAlign.Center
+                                )
+                            }
                         }
+                    }
+                }
+            } else {
+                item {
+                    Card(
+                        shape = RoundedCornerShape(16.dp),
+                        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+                        border = BorderStroke(1.dp, SaffronPrimary.copy(alpha = 0.3f))
+                    ) {
+                        Column(modifier = Modifier.padding(16.dp)) {
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.SpaceBetween,
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Text(
+                                    text = if (isHindi) "सर्च ग्राउंडिंग परिणाम" else "Grounded Search Result",
+                                    fontWeight = FontWeight.Bold,
+                                    fontSize = 14.sp
+                                )
+                            }
+
+                            Spacer(modifier = Modifier.height(8.dp))
+                            Text(
+                                text = summaryText,
+                                fontSize = 13.sp,
+                                color = SlateTextPrimary,
+                                lineHeight = 19.sp
+                            )
+                        }
+                    }
+                }
+
+                item {
+                    Text(
+                        text = if (isHindi) "वेब संदर्भ व स्रोत (${sourceList.size}):" else "Web Citations & Sources (${sourceList.size}):",
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 14.sp,
+                        color = SlateTextPrimary
                     )
+                }
+
+                items(sourceList) { src ->
+                    Card(
+                        shape = RoundedCornerShape(14.dp),
+                        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+                        border = BorderStroke(1.dp, SlateBorder.copy(alpha = 0.7f)),
+                        elevation = CardDefaults.cardElevation(defaultElevation = 1.dp)
+                    ) {
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(12.dp)
+                        ) {
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.SpaceBetween,
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Surface(
+                                    shape = RoundedCornerShape(6.dp),
+                                    color = SlateBorderLight
+                                ) {
+                                    Text(
+                                        text = src.domain,
+                                        fontSize = 10.sp,
+                                        fontWeight = FontWeight.Bold,
+                                        color = SlateTextSecondary,
+                                        modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp)
+                                    )
+                                }
+
+                                Icon(
+                                    imageVector = Icons.Default.CheckCircle,
+                                    contentDescription = "Web Source",
+                                    tint = ForestGreen,
+                                    modifier = Modifier.size(16.dp)
+                                )
+                            }
+
+                            Spacer(modifier = Modifier.height(6.dp))
+
+                            Text(
+                                text = src.title,
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 13.sp,
+                                color = SlateTextPrimary
+                            )
+
+                            if (!src.snippet.isNullOrBlank()) {
+                                Spacer(modifier = Modifier.height(4.dp))
+                                Text(
+                                    text = src.snippet,
+                                    fontSize = 11.5.sp,
+                                    color = SlateTextSecondary,
+                                    maxLines = 2,
+                                    overflow = TextOverflow.Ellipsis
+                                )
+                            }
+
+                            Spacer(modifier = Modifier.height(8.dp))
+
+                            Text(
+                                text = src.url,
+                                fontSize = 10.5.sp,
+                                color = SaffronDark,
+                                fontWeight = FontWeight.SemiBold,
+                                maxLines = 1,
+                                overflow = TextOverflow.Ellipsis,
+                                modifier = Modifier.clickable {
+                                    Toast.makeText(context, "Opening source citation: ${src.url}", Toast.LENGTH_SHORT).show()
+                                }
+                            )
+                        }
+                    }
                 }
             }
         }
