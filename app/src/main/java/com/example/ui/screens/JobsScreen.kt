@@ -4,6 +4,7 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
@@ -37,6 +38,7 @@ import com.example.data.model.hasValidOfficialGovUrl
 import com.example.data.model.getEffectiveOfficialUrl
 import com.example.ui.components.GovtDisclaimerBanner
 import com.example.ui.components.GovtSourcesDialog
+import com.example.ui.components.OfficialPortalsSection
 import com.example.ui.theme.*
 import com.example.ui.util.ShareHelper
 
@@ -280,17 +282,24 @@ fun JobsScreen(
             Box(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(32.dp),
-                contentAlignment = Alignment.Center
+                    .verticalScroll(rememberScrollState())
+                    .padding(horizontal = horizontalContentPadding, vertical = 16.dp),
+                contentAlignment = Alignment.TopCenter
             ) {
-                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .widthIn(max = 640.dp)
+                ) {
+                    Spacer(modifier = Modifier.height(12.dp))
                     Icon(
                         imageVector = Icons.Default.WorkOutline,
                         contentDescription = null,
                         tint = SlateTextMuted,
-                        modifier = Modifier.size(64.dp)
+                        modifier = Modifier.size(56.dp)
                     )
-                    Spacer(modifier = Modifier.height(12.dp))
+                    Spacer(modifier = Modifier.height(10.dp))
                     Text(
                         text = if (selectedJobType == JobType.PRIVATE) {
                             if (isHindi) "अभी कोई प्राइवेट नौकरी उपलब्ध नहीं है" else "No private jobs available right now"
@@ -301,18 +310,34 @@ fun JobsScreen(
                         },
                         fontWeight = FontWeight.Bold,
                         color = SlateTextSecondary,
-                        fontSize = 14.sp,
+                        fontSize = 15.sp,
                         textAlign = androidx.compose.ui.text.style.TextAlign.Center
                     )
-                    if (selectedJobType == JobType.PRIVATE) {
-                        Spacer(modifier = Modifier.height(6.dp))
-                        Text(
-                            text = if (isHindi) "स्थानीय नियोक्ता अपनी रिक्तियां पोस्ट कर सकते हैं। केवल आधिकारिक रूप से सत्यापित नौकरियां ही दिखाई जाएंगी।" else "Local employers can post vacancies. Only officially verified listings will be displayed.",
-                            fontSize = 12.sp,
-                            color = SlateTextMuted,
-                            textAlign = androidx.compose.ui.text.style.TextAlign.Center
-                        )
-                    }
+                    Spacer(modifier = Modifier.height(6.dp))
+                    Text(
+                        text = if (selectedJobType == JobType.PRIVATE) {
+                            if (isHindi) "स्थानीय नियोक्ता अपनी रिक्तियां पोस्ट कर सकते हैं। केवल आधिकारिक रूप से सत्यापित नौकरियां ही दिखाई जाएंगी।" else "Local employers can post vacancies. Only officially verified listings will be displayed."
+                        } else {
+                            if (isHindi) "केवल वास्तविक व सत्यापित पोर्टल लिंक्स दिखाए जाते हैं। आधिकारिक भर्ती व परीक्षाओं के लिए नीचे दिए गए अधिकृत सरकारी पोर्टल्स देखें:" else "Only authentic official links are displayed. For legitimate government recruitments and competitive exams, please refer to the official portals below:"
+                        },
+                        fontSize = 12.sp,
+                        color = SlateTextMuted,
+                        textAlign = androidx.compose.ui.text.style.TextAlign.Center,
+                        modifier = Modifier.padding(horizontal = 12.dp)
+                    )
+
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    OfficialPortalsSection(
+                        isHindi = isHindi,
+                        titleOverride = if (isHindi) "आधिकारिक सरकारी भर्ती व परीक्षा पोर्टल" else "Official Govt Recruitment & Job Portals",
+                        subtitleOverride = if (isHindi)
+                            "संघ व राज्य शासन की अधिकृत भर्ती सूचनाओं के लिए सीधे इन सरकारी पोर्टल्स पर जाएं:"
+                        else
+                            "Access direct recruitment notifications & application forms via official government websites:"
+                    )
+
+                    Spacer(modifier = Modifier.height(24.dp))
                 }
             }
         } else {

@@ -3,6 +3,7 @@ package com.example.ui.screens
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
@@ -27,6 +28,7 @@ import androidx.compose.ui.unit.sp
 import com.example.data.model.NewsArticle
 import com.example.data.model.NewsCategory
 import com.example.ui.components.NewsCard
+import com.example.ui.components.OfficialPortalsSection
 import com.example.ui.theme.*
 import com.example.ui.util.ShareHelper
 
@@ -253,10 +255,17 @@ fun NewsScreen(
                 Box(
                     modifier = Modifier
                         .fillMaxSize()
-                        .padding(32.dp),
-                    contentAlignment = Alignment.Center
+                        .verticalScroll(rememberScrollState())
+                        .padding(horizontal = horizontalContentPadding, vertical = 16.dp),
+                    contentAlignment = Alignment.TopCenter
                 ) {
-                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .widthIn(max = 640.dp)
+                    ) {
+                        Spacer(modifier = Modifier.height(12.dp))
                         Icon(
                             imageVector = Icons.Default.Newspaper,
                             contentDescription = null,
@@ -268,16 +277,41 @@ fun NewsScreen(
                             text = if (isHindi) "इस क्षेत्र/श्रेणी में कोई खबर नहीं मिली" else "No news found for this location/category",
                             fontWeight = FontWeight.Bold,
                             color = SlateTextSecondary,
-                            fontSize = 13.sp
+                            fontSize = 15.sp,
+                            textAlign = androidx.compose.ui.text.style.TextAlign.Center
                         )
-                        Spacer(modifier = Modifier.height(8.dp))
+                        Spacer(modifier = Modifier.height(6.dp))
+                        Text(
+                            text = if (isHindi)
+                                "भारतवन पर केवल लाइव व अधिकृत स्रोतों से सत्यापित समाचार प्रसारित किए जाते हैं। आधिकारिक सरकारी विज्ञप्ति व सूचनाओं के लिए नीचे दिए गए अधिकृत पोर्टल्स देखें:"
+                            else
+                                "BharatOne only broadcasts authentic news from verified feeds. For official government notifications and press releases, please visit the authorized portals below:",
+                            fontSize = 12.sp,
+                            color = SlateTextMuted,
+                            textAlign = androidx.compose.ui.text.style.TextAlign.Center,
+                            modifier = Modifier.padding(horizontal = 12.dp)
+                        )
+                        Spacer(modifier = Modifier.height(14.dp))
                         Button(
                             onClick = onRunAutoNews,
                             shape = RoundedCornerShape(10.dp),
                             colors = ButtonDefaults.buttonColors(containerColor = SaffronPrimary)
                         ) {
-                            Text(if (isHindi) "⚡ अभी न्यूज़ अपडेट फेच करें" else "⚡ Fetch News Now", fontSize = 12.sp)
+                            Text(if (isHindi) "⚡ अभी लाइव बुलेटिन फेच करें" else "⚡ Check Live News Feed", fontSize = 12.sp)
                         }
+
+                        Spacer(modifier = Modifier.height(16.dp))
+
+                        OfficialPortalsSection(
+                            isHindi = isHindi,
+                            titleOverride = if (isHindi) "आधिकारिक सरकारी समाचार व पोर्टल" else "Official Government Portals & Releases",
+                            subtitleOverride = if (isHindi)
+                                "केंद्र व राज्य शासन की आधिकारिक विज्ञप्ति व सूचनाओं के लिए सीधे अधिकृत पोर्टल्स पर जाएं:"
+                            else
+                                "Access authorized government releases, gazette notifications & public information:"
+                        )
+
+                        Spacer(modifier = Modifier.height(24.dp))
                     }
                 }
             } else {

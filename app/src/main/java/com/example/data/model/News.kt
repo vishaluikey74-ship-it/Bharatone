@@ -35,14 +35,14 @@ enum class PublicationLevel(val levelName: String, val hindiTitle: String, val d
 }
 
 data class SourceAttribution(
-    val sourceName: String,
-    val sourceUrl: String,
+    val sourceName: String = "",
+    val sourceUrl: String = "",
     val isOfficialGovSource: Boolean = false,
-    val isApprovedLicenseFeed: Boolean = true,
-    val publicationDateTime: String = "01 Sep 2026, 09:30 AM",
-    val updatedDateTime: String = "01 Sep 2026, 10:15 AM",
-    val originalAuthorOrDept: String = "Press Trust of India / PIB",
-    val copyrightNotice: String = "Attributed source summary compliant with BharatOne Content & Copyright Policy. Full text not reproduced without license."
+    val isApprovedLicenseFeed: Boolean = false,
+    val publicationDateTime: String = "",
+    val updatedDateTime: String = "",
+    val originalAuthorOrDept: String = "",
+    val copyrightNotice: String = "Attributed source summary compliant with BharatOne Content & Copyright Policy."
 )
 
 data class NewsArticle(
@@ -53,28 +53,28 @@ data class NewsArticle(
     val englishSummary: String,
     val fullContentHindi: String,
     val fullContentEnglish: String,
-    val sourceName: String = "Press Information Bureau (PIB)",
-    val sourceUrl: String = "https://pib.gov.in",
+    val sourceName: String = "",
+    val sourceUrl: String = "",
     val sourceAttribution: SourceAttribution = SourceAttribution(sourceName, sourceUrl),
     val publishedAt: Long = System.currentTimeMillis(),
     val updatedAt: Long = System.currentTimeMillis(),
     val state: String = "Madhya Pradesh",
     val district: String = "Balaghat",
     val city: String = "Balaghat City",
-    val area: String = "Paraswada",
+    val area: String = "Balaghat",
     val category: NewsCategory = NewsCategory.LOCAL,
-    val verificationStatus: NewsVerificationStatus = NewsVerificationStatus.VERIFIED_NEWS,
-    val publicationLevel: PublicationLevel = PublicationLevel.LEVEL_1_AUTO,
+    val verificationStatus: NewsVerificationStatus = NewsVerificationStatus.SOURCE_SUMMARY,
+    val publicationLevel: PublicationLevel = PublicationLevel.LEVEL_2_AI_ADMIN,
     val isBreaking: Boolean = false,
     val isUnconfirmedInfo: Boolean = false,
     val unconfirmedNote: String? = null,
     val imageUrl: String = "",
-    val authorName: String = "PIB / Bharat News Bureau",
+    val authorName: String = "",
     val authorId: String? = null,
-    val viewsCount: Int = 1240,
-    val likesCount: Int = 89,
-    val sharesCount: Int = 34,
-    val isFactChecked: Boolean = true
+    val viewsCount: Int = 0,
+    val likesCount: Int = 0,
+    val sharesCount: Int = 0,
+    val isFactChecked: Boolean = false
 )
 
 fun NewsArticle.hasValidOfficialGovUrl(): Boolean {

@@ -33,6 +33,9 @@ interface JobDao {
     @Query("DELETE FROM jobs WHERE sourceDomain = :sourceDomain")
     suspend fun deleteJobsBySource(sourceDomain: String)
 
+    @Query("DELETE FROM jobs")
+    suspend fun deleteAllJobs()
+
     @Query("SELECT COUNT(*) FROM jobs")
     suspend fun getTotalJobCount(): Int
 

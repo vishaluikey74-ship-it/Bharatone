@@ -1432,18 +1432,6 @@ fun MapsGroundingSection(
                             fontWeight = FontWeight.Bold,
                             fontSize = 14.sp
                         )
-                        Surface(
-                            shape = RoundedCornerShape(6.dp),
-                            color = ForestGreenContainer
-                        ) {
-                            Text(
-                                text = "VERIFIED GOOGLE MAPS",
-                                color = ForestGreen,
-                                fontSize = 9.sp,
-                                fontWeight = FontWeight.ExtraBold,
-                                modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp)
-                            )
-                        }
                     }
 
                     Spacer(modifier = Modifier.height(8.dp))
@@ -1459,7 +1447,7 @@ fun MapsGroundingSection(
 
         item {
             Text(
-                text = if (isHindi) "सत्यापित स्थान व संपर्क:" else "Verified Grounded Locations (${placeList.size}):",
+                text = if (isHindi) "स्थान व संपर्क:" else "Grounded Locations (${placeList.size}):",
                 fontWeight = FontWeight.Bold,
                 fontSize = 14.sp,
                 color = SlateTextPrimary
@@ -2041,18 +2029,6 @@ fun SearchGroundingSection(
                             fontWeight = FontWeight.Bold,
                             fontSize = 14.sp
                         )
-                        Surface(
-                            shape = RoundedCornerShape(6.dp),
-                            color = ForestGreenContainer
-                        ) {
-                            Text(
-                                text = "GROUND TRUTH VERIFIED",
-                                color = ForestGreen,
-                                fontSize = 9.sp,
-                                fontWeight = FontWeight.ExtraBold,
-                                modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp)
-                            )
-                        }
                     }
 
                     Spacer(modifier = Modifier.height(8.dp))
@@ -2068,7 +2044,7 @@ fun SearchGroundingSection(
 
         item {
             Text(
-                text = if (isHindi) "सत्यापित वेब संदर्भ व स्रोत:" else "Verified Web Citations & Sources (${sourceList.size}):",
+                text = if (isHindi) "वेब संदर्भ व स्रोत:" else "Web Citations & Sources (${sourceList.size}):",
                 fontWeight = FontWeight.Bold,
                 fontSize = 14.sp,
                 color = SlateTextPrimary
@@ -2107,7 +2083,7 @@ fun SearchGroundingSection(
 
                         Icon(
                             imageVector = Icons.Default.CheckCircle,
-                            contentDescription = "Verified Source",
+                            contentDescription = "Web Source",
                             tint = ForestGreen,
                             modifier = Modifier.size(16.dp)
                         )

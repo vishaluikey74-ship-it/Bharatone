@@ -32,7 +32,7 @@ fun PipelineSimulatorDialog(
     onDismiss: () -> Unit
 ) {
     val isHindi = language == "hi"
-    var inputUrl by remember { mutableStateOf("https://mppsc.mp.gov.in/recruitment_2026.pdf") }
+    var inputUrl by remember { mutableStateOf("https://mppsc.mp.gov.in") }
     var sourceName by remember { mutableStateOf("Madhya Pradesh Public Service Commission (mppsc.mp.gov.in)") }
     var selectedExecution by remember { mutableStateOf(executions.firstOrNull()) }
 
